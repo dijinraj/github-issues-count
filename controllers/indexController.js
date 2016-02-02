@@ -93,10 +93,12 @@ var getIssueCount = function (reppoName, callback) {
 				if(issue.html_url.indexOf('issue') > -1) {
 					numberDays = getDiffDays(now, new Date(issue.created_at));
 
-					switch(numberDays) {
-						case 1: group = 'low';break;
-						case 7: group = 'medium';break;
-						default: group = 'high';
+					if(numberDays <= 1) {
+						group = 'low';
+					} else if(numberDays <= 7) {
+						group = 'medium';
+					} else {
+						group = 'high';
 					}
 
 					dateGroup[group]++;
@@ -134,7 +136,7 @@ var callGitapi = function (options, page, result, callback) {
 	api.request(options, [], function(data) {
 		try {
 			var newResult = JSON.parse(data.result);
-			console.log("## ", newResult);
+			// console.log("## ", newResult);
 			if(Array.isArray(newResult)) {
 				if(newResult.length < limit) {
 					isEnd = true;
